@@ -3,12 +3,11 @@ package com.Ejercicio4.controller;
 
 import com.Ejercicio4.entities.Laptop;
 import com.Ejercicio4.repository.LaptopRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class LaptopController {
@@ -31,9 +30,27 @@ public class LaptopController {
         return laptopRepository.findAll();
     }
 
+    //findById
+
+    @GetMapping("/api/laptops/{id}")
+    public Laptop findOneById(@PathVariable Long id){
+        Optional<Laptop> obtenerLaptop = laptopRepository.findById(id);
+
+        if(obtenerLaptop.isPresent())
+            return obtenerLaptop.get();
+
+    }
+
+    //Create
     @PostMapping("/api/laptops")
     public void create (@RequestBody Laptop laptop){
-        //guarda el libre recibido por parametro en la base de datos
+        //guarda la laptop recibida por parametro en la base de datos
         laptopRepository.save(laptop);
+    }
+
+    //Update
+    @PutMapping("/api/laptops")
+    public Laptop update(@RequestBody Laptop laptop){
+        return null;
     }
 }
