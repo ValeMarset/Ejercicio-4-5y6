@@ -1,13 +1,15 @@
-package com.Ejercicio4.controller;
 
 
-import com.Ejercicio4.entities.Laptop;
-import com.Ejercicio4.repository.LaptopRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+        package com.Ejercicio4.controller;
 
-import java.util.List;
-import java.util.Optional;
+
+        import com.Ejercicio4.entities.Laptop;
+        import com.Ejercicio4.repository.LaptopRepository;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.web.bind.annotation.*;
+
+        import java.util.List;
+        import java.util.Optional;
 
 @RestController
 public class LaptopController {
@@ -33,13 +35,18 @@ public class LaptopController {
     //findById
 
     @GetMapping("/api/laptops/{id}")
-    public Laptop findOneById(@PathVariable Long id){
-        Optional<Laptop> obtenerLaptop = laptopRepository.findById(id);
 
-        if(obtenerLaptop.isPresent())
-            return obtenerLaptop.get();
+    public ResponseEntity<Laptop> findOneById(@PathVariable Long id) {
+
+        Optional<Laptop> laptopOpt = laptopRepository.findById(id);
+
+        if (laptopOpt.isPresent())
+            return ResponseEntity.ok(laptopOpt.get());
+        else
+            return ResponseEntity.notFound().build();
 
     }
+
 
     //Create
     @PostMapping("/api/laptops")
@@ -50,7 +57,28 @@ public class LaptopController {
 
     //Update
     @PutMapping("/api/laptops")
-    public Laptop update(@RequestBody Laptop laptop){
-        return null;
+    public String update(@RequestBody Laptop laptop){
+        if(laptopRepository.existsById((laptop.getId()))){
+            Laptop result = laptopRepository.save(laptop);
+        }
+        return "Los datos se han actualizado correctamente";
+    }
+
+    //Delete
+    @DeleteMapping("/api/laptops/{id}")
+    public String delete(@PathVariable Long id){
+
+        laptopRepository.deleteById(id);
+
+        return "Esta laptop se ha eliminado satisfactoriamente";
+
+    }
+
+    //Delete All
+    @DeleteMapping("/api/laptops")
+    public void deleteAll(){
+
+        laptopRepository.deleteAll();
+
     }
 }
